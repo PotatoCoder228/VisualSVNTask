@@ -21,7 +21,7 @@ int main(int argc, char **argv) {
     time(&start);
     int flag = app_start(argv[1], argv[2], exception);
     time(&end);
-    if(flag != EXIT_FAILURE) {
+    if (flag != EXIT_FAILURE) {
         printf("Program reversed file from %lld seconds\n", end - start);
     }
     exception_destroy(exception);
