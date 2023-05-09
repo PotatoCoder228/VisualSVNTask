@@ -26,7 +26,6 @@ int app_start(char *in_name, char *out_name, exception_s *exception) {
 
     if (!reverse(in, out)) {
         throw_exception(exception, errno, "Can't reverse bytes.");
-        return EXIT_FAILURE;
     }
     int flag = fclose(in);
     if (flag == -1) {

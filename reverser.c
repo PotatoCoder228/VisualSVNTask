@@ -21,7 +21,7 @@ static bool reverse_block(int8_t *array, size_t size) {
 }
 
 enum rvrs_consts {
-    BLOCK_SIZE = 1000000
+    BLOCK_SIZE = 500000
 };
 
 
@@ -50,19 +50,42 @@ bool reverse(FILE *in, FILE *out) {
     for (int64_t offset = -BLOCK_SIZE; offset >= (-bytes); offset -= BLOCK_SIZE) {
         flag = fseeko(in, offset, SEEK_END);
         if (flag == -1) {
+            free(symbols);
             return false;
         }
         flag = (int64_t) fread(symbols, sizeof(int8_t), BLOCK_SIZE, in);
         if (flag == -1) {
+            free(symbols);
             return false;
         }
         if (!reverse_block(symbols, flag)) {
+            free(symbols);
             return false;
         }
         flag = (int64_t) fwrite(symbols, sizeof(int8_t), flag, out);
         if (flag == -1) {
+            free(symbols);
             return false;
         }
+    }
+    flag = fseeko(in, 0, SEEK_SET);
+    if (flag == -1) {
+        free(symbols);
+        return false;
+    }
+    flag = (int64_t) fread(symbols, sizeof(int8_t), bytes % BLOCK_SIZE, in);
+    if (flag == -1) {
+        free(symbols);
+        return false;
+    }
+    if (!reverse_block(symbols, flag)) {
+        free(symbols);
+        return false;
+    }
+    flag = (int64_t) fwrite(symbols, sizeof(int8_t), flag, out);
+    if (flag == -1) {
+        free(symbols);
+        return false;
     }
     free(symbols);
     return true;
@@ -91,19 +114,42 @@ bool reverse(FILE *in, FILE *out) {
     for (int64_t offset = -BLOCK_SIZE; offset >= (-bytes); offset -= BLOCK_SIZE) {
         flag = _fseeki64(in, offset, SEEK_END);
         if (flag == -1) {
+            free(symbols);
             return false;
         }
         flag = (int64_t) fread(symbols, sizeof(int8_t), BLOCK_SIZE, in);
         if (flag == -1) {
+            free(symbols);
             return false;
         }
         if (!reverse_block(symbols, flag)) {
+            free(symbols);
             return false;
         }
         flag = (int64_t) fwrite(symbols, sizeof(int8_t), flag, out);
         if (flag == -1) {
+            free(symbols);
             return false;
         }
+    }
+    flag = _fseeki64(in, 0, SEEK_SET);
+    if (flag == -1) {
+        free(symbols);
+        return false;
+    }
+    flag = (int64_t) fread(symbols, sizeof(int8_t), bytes%BLOCK_SIZE, in);
+    if (flag == -1) {
+        free(symbols);
+        return false;
+    }
+    if (!reverse_block(symbols, flag)) {
+        free(symbols);
+        return false;
+    }
+    flag = (int64_t) fwrite(symbols, sizeof(int8_t), flag, out);
+    if (flag == -1) {
+        free(symbols);
+        return false;
     }
     free(symbols);
     return true;
