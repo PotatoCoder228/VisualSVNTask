@@ -39,7 +39,7 @@ bool reverse(FILE *in, FILE *out) {
 }
 
 #else
-#include <Windows.h>
+
 bool reverse(FILE *in, FILE *out) {
     if (in == NULL || out == NULL) {
         return false;
@@ -69,4 +69,5 @@ bool reverse(FILE *in, FILE *out) {
     }
     return true;
 }
+
 #endif
